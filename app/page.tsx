@@ -218,8 +218,8 @@ export default function Home() {
                   </p>
                 </div>
               </div>
-              <div className="flex items-start gap-4 p-4 bg-orange-50 rounded-lg border border-orange-200">
-                <Badge className="bg-orange-600 text-white mt-1">2</Badge>
+              <div className="flex items-start gap-4 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+                <Badge className="bg-yellow-600 text-white mt-1">2</Badge>
                 <div>
                   <h4 className="font-semibold">Emerging</h4>
                   <p className="text-sm text-slate-600">
@@ -227,8 +227,8 @@ export default function Home() {
                   </p>
                 </div>
               </div>
-              <div className="flex items-start gap-4 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-                <Badge className="bg-yellow-600 text-white mt-1">3</Badge>
+              <div className="flex items-start gap-4 p-4 bg-green-50 rounded-lg border border-green-200">
+                <Badge className="bg-green-600 text-white mt-1">3</Badge>
                 <div>
                   <h4 className="font-semibold">Defined</h4>
                   <p className="text-sm text-slate-600">
@@ -236,8 +236,8 @@ export default function Home() {
                   </p>
                 </div>
               </div>
-              <div className="flex items-start gap-4 p-4 bg-green-50 rounded-lg border border-green-200">
-                <Badge className="bg-green-600 text-white mt-1">4</Badge>
+              <div className="flex items-start gap-4 p-4 bg-emerald-50 rounded-lg border border-emerald-200">
+                <Badge className="bg-emerald-700 text-white mt-1">4</Badge>
                 <div>
                   <h4 className="font-semibold">Optimized</h4>
                   <p className="text-sm text-slate-600">

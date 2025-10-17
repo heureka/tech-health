@@ -19,22 +19,22 @@ const levelColors = {
     badge: 'bg-red-600 text-white'
   },
   2: {
-    bg: 'hover:bg-orange-50',
-    border: 'border-orange-200',
-    selected: 'bg-orange-100 border-orange-500 border-2',
-    badge: 'bg-orange-600 text-white'
-  },
-  3: {
     bg: 'hover:bg-yellow-50',
     border: 'border-yellow-200',
     selected: 'bg-yellow-100 border-yellow-500 border-2',
     badge: 'bg-yellow-600 text-white'
   },
-  4: {
+  3: {
     bg: 'hover:bg-green-50',
     border: 'border-green-200',
     selected: 'bg-green-100 border-green-500 border-2',
     badge: 'bg-green-600 text-white'
+  },
+  4: {
+    bg: 'hover:bg-emerald-50',
+    border: 'border-emerald-200',
+    selected: 'bg-emerald-100 border-emerald-600 border-2',
+    badge: 'bg-emerald-700 text-white'
   }
 };
 

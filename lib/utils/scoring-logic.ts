@@ -241,17 +241,17 @@ export function formatDate(isoString: string): string {
 
 export function getScoreColor(score: number): string {
   if (score < 2) return 'text-red-600';
-  if (score < 3) return 'text-orange-600';
-  if (score < 3.5) return 'text-yellow-600';
-  return 'text-green-600';
+  if (score < 3) return 'text-yellow-600';
+  if (score < 3.5) return 'text-green-600';
+  return 'text-emerald-700';
 }
 
 export function getMaturityColor(level: MaturityLevel): string {
   const colors = {
     unstable: 'bg-red-100 text-red-800 border-red-300',
-    emerging: 'bg-orange-100 text-orange-800 border-orange-300',
-    defined: 'bg-yellow-100 text-yellow-800 border-yellow-300',
-    optimized: 'bg-green-100 text-green-800 border-green-300',
+    emerging: 'bg-yellow-100 text-yellow-800 border-yellow-300',
+    defined: 'bg-green-100 text-green-800 border-green-300',
+    optimized: 'bg-emerald-100 text-emerald-800 border-emerald-300',
   };
   return colors[level];
 }
