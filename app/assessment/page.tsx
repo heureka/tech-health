@@ -11,12 +11,16 @@ import { Textarea } from '@/components/ui/textarea';
 import { assessmentFramework } from '@/lib/data/assessment-data';
 import { AssessmentResponse, SubAxisScore, TeamInfo } from '@/lib/types/assessment';
 import { saveAssessment, loadAssessment } from '@/lib/utils/storage';
-import { ArrowLeft, ArrowRight, Save } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Save, LayoutList, Rows3 } from 'lucide-react';
 import AreaAssessment from '@/components/assessment/AreaAssessment';
 import PulseSurvey from '@/components/assessment/PulseSurvey';
+import CompactView from '@/components/assessment/CompactView';
+
+type ViewMode = 'wizard' | 'compact';
 
 export default function AssessmentPage() {
   const router = useRouter();
+  const [viewMode, setViewMode] = useState<ViewMode>('wizard');
   const [currentStep, setCurrentStep] = useState(0);
   const [teamInfo, setTeamInfo] = useState<TeamInfo>({
     teamName: '',
@@ -31,7 +35,7 @@ export default function AssessmentPage() {
   const totalSteps = assessmentFramework.areas.length + 2; // team info + areas + pulse survey
   const progress = (currentStep / (totalSteps - 1)) * 100;
 
-  // Load saved assessment on mount
+  // Load saved assessment and view mode on mount
   useEffect(() => {
     const saved = loadAssessment();
     if (saved) {
@@ -41,6 +45,12 @@ export default function AssessmentPage() {
       if (saved.teamInfo?.participants) {
         setParticipantsText(saved.teamInfo.participants.join(', '));
       }
+    }
+
+    // Load view mode preference
+    const savedViewMode = localStorage.getItem('assessmentViewMode') as ViewMode;
+    if (savedViewMode) {
+      setViewMode(savedViewMode);
     }
   }, []);
 
@@ -59,6 +69,11 @@ export default function AssessmentPage() {
     };
     saveAssessment(response);
   }, [teamInfo, scores, pulseScores, participantsText]);
+
+  // Save view mode preference
+  useEffect(() => {
+    localStorage.setItem('assessmentViewMode', viewMode);
+  }, [viewMode]);
 
   const handleNext = () => {
     if (currentStep < totalSteps - 1) {
@@ -119,6 +134,23 @@ export default function AssessmentPage() {
       );
     }
     return true;
+  };
+
+  const canViewResults = () => {
+    // Check if team info is filled
+    if (!teamInfo.teamName.trim()) return false;
+
+    // Check if all areas are completed
+    const allAreasComplete = assessmentFramework.areas.every(area =>
+      area.subAxes.every(subAxis => scores[subAxis.id]?.level > 0)
+    );
+
+    // Check if pulse survey is complete
+    const pulseSurveyComplete = assessmentFramework.pulseSurvey.every(q =>
+      pulseScores[q.id] !== undefined && pulseScores[q.id] !== null
+    );
+
+    return allAreasComplete && pulseSurveyComplete;
   };
 
   const renderStep = () => {
@@ -217,6 +249,58 @@ export default function AssessmentPage() {
     return '';
   };
 
+  const renderTeamInfo = () => (
+    <Card className="mb-6">
+      <CardHeader>
+        <CardTitle className="text-xl">Team Information</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="teamName-compact">Team Name *</Label>
+          <Input
+            id="teamName-compact"
+            placeholder="e.g., Content Gang, Platform Team"
+            value={teamInfo.teamName}
+            onChange={(e) => setTeamInfo(prev => ({ ...prev, teamName: e.target.value }))}
+          />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="date-compact">Assessment Date</Label>
+            <Input
+              id="date-compact"
+              type="date"
+              value={teamInfo.date}
+              onChange={(e) => setTeamInfo(prev => ({ ...prev, date: e.target.value }))}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="participants-compact">Participants</Label>
+            <Input
+              id="participants-compact"
+              placeholder="e.g., John, Jane, Tech Lead"
+              value={participantsText}
+              onChange={(e) => setParticipantsText(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="notes-compact">Notes (optional)</Label>
+          <Textarea
+            id="notes-compact"
+            placeholder="Any context about this assessment..."
+            value={teamInfo.notes}
+            onChange={(e) => setTeamInfo(prev => ({ ...prev, notes: e.target.value }))}
+            rows={2}
+          />
+        </div>
+      </CardContent>
+    </Card>
+  );
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100">
       <div className="container mx-auto px-4 py-8 max-w-4xl">
@@ -224,53 +308,149 @@ export default function AssessmentPage() {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <h1 className="text-3xl font-bold">Tech Health Assessment</h1>
-            <div className="text-sm text-slate-600">
-              Step {currentStep + 1} of {totalSteps}
+
+            {/* View Mode Toggle */}
+            <div className="flex items-center gap-2 bg-white rounded-lg border p-1">
+              <Button
+                variant={viewMode === 'wizard' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('wizard')}
+                className="gap-2"
+              >
+                <LayoutList className="w-4 h-4" />
+                <span className="hidden sm:inline">Wizard</span>
+              </Button>
+              <Button
+                variant={viewMode === 'compact' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('compact')}
+                className="gap-2"
+              >
+                <Rows3 className="w-4 h-4" />
+                <span className="hidden sm:inline">Compact</span>
+              </Button>
             </div>
           </div>
-          <Progress value={progress} className="h-2" />
-        </div>
 
-        {/* Step Title */}
-        <div className="mb-6">
-          <h2 className="text-2xl font-semibold text-slate-800">{getStepTitle()}</h2>
-          {currentStep === 0 && (
-            <p className="text-slate-600 mt-2">
-              Assessment takes 20-30 minutes. Your progress is saved automatically.
-            </p>
+          {viewMode === 'wizard' && (
+            <>
+              <div className="flex items-center justify-between mb-2">
+                <div className="text-sm text-slate-600">
+                  Step {currentStep + 1} of {totalSteps}
+                </div>
+              </div>
+              <Progress value={progress} className="h-2" />
+            </>
           )}
         </div>
 
-        {/* Step Content */}
-        <div className="mb-8">
-          {renderStep()}
-        </div>
+        {/* Wizard Mode */}
+        {viewMode === 'wizard' && (
+          <>
+            {/* Step Title */}
+            <div className="mb-6">
+              <h2 className="text-2xl font-semibold text-slate-800">{getStepTitle()}</h2>
+              {currentStep === 0 && (
+                <p className="text-slate-600 mt-2">
+                  Assessment takes 20-30 minutes. Your progress is saved automatically.
+                </p>
+              )}
+            </div>
 
-        {/* Navigation */}
-        <div className="flex justify-between items-center">
-          <Button
-            variant="outline"
-            onClick={handlePrevious}
-            className="gap-2"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            {currentStep === 0 ? 'Home' : 'Previous'}
-          </Button>
+            {/* Step Content */}
+            <div className="mb-8">
+              {renderStep()}
+            </div>
 
-          <div className="flex items-center gap-2 text-sm text-slate-600">
-            <Save className="w-4 h-4" />
-            Auto-saved
-          </div>
+            {/* Navigation */}
+            <div className="flex justify-between items-center">
+              <Button
+                variant="outline"
+                onClick={handlePrevious}
+                className="gap-2"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                {currentStep === 0 ? 'Home' : 'Previous'}
+              </Button>
 
-          <Button
-            onClick={handleNext}
-            disabled={!canProceed()}
-            className="gap-2"
-          >
-            {currentStep === totalSteps - 1 ? 'View Results' : 'Next'}
-            <ArrowRight className="w-4 h-4" />
-          </Button>
-        </div>
+              <div className="flex items-center gap-2 text-sm text-slate-600">
+                <Save className="w-4 h-4" />
+                Auto-saved
+              </div>
+
+              <Button
+                onClick={handleNext}
+                disabled={!canProceed()}
+                className="gap-2"
+              >
+                {currentStep === totalSteps - 1 ? 'View Results' : 'Next'}
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </div>
+          </>
+        )}
+
+        {/* Compact Mode */}
+        {viewMode === 'compact' && (
+          <>
+            <div className="mb-6">
+              <p className="text-slate-600">
+                Fill out all sections below. Your progress is saved automatically.
+              </p>
+            </div>
+
+            {renderTeamInfo()}
+
+            <CompactView
+              areas={assessmentFramework.areas}
+              pulseSurvey={assessmentFramework.pulseSurvey}
+              scores={scores}
+              pulseScores={pulseScores}
+              onScoreChange={handleScoreChange}
+              onPulseScoreChange={handlePulseScoreChange}
+            />
+
+            {/* Compact Mode Navigation */}
+            <div className="mt-8 flex justify-between items-center">
+              <Button
+                variant="outline"
+                onClick={() => router.push('/')}
+                className="gap-2"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Home
+              </Button>
+
+              <div className="flex items-center gap-2 text-sm text-slate-600">
+                <Save className="w-4 h-4" />
+                Auto-saved
+              </div>
+
+              <Button
+                onClick={() => {
+                  const finalResponse: AssessmentResponse = {
+                    teamInfo: {
+                      ...teamInfo,
+                      participants: participantsText
+                        .split(',')
+                        .map(p => p.trim())
+                        .filter(p => p.length > 0)
+                    },
+                    scores,
+                    pulseScores
+                  };
+                  saveAssessment(finalResponse);
+                  router.push('/results');
+                }}
+                disabled={!canViewResults()}
+                className="gap-2"
+              >
+                View Results
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
