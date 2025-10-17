@@ -46,12 +46,11 @@ The [Heureka Career Journey Generator](https://heureka-career-journey-generator.
 4. Logging / Tracing
 5. Postmortems & Learning
 
-#### D. Delivery Performance - DORA (5 sub-axes)
+#### D. Delivery Performance - DORA (4 sub-axes)
 1. Deployment Frequency (DF)
 2. Lead Time for Changes (LTC)
 3. Change Failure Rate (CFR)
 4. Mean Time to Recovery (MTTR)
-5. Rollback Frequency
 
 #### E. Governance & Knowledge (5 sub-axes)
 1. ADR Discipline
@@ -60,12 +59,13 @@ The [Heureka Career Journey Generator](https://heureka-career-journey-generator.
 4. Ownership Clarity
 5. Transparency
 
-### Pulse Survey (5 questions, 0-10 scale)
+### Pulse Survey (6 questions, 0-10 scale)
 1. How much does tech debt slow you down?
 2. How smooth is your release process?
 3. Do you have time for stability / engineering work?
 4. Do you feel leadership supports technical investment?
 5. Are your tools / environments effective?
+6. What's currently the biggest thing slowing your team down?
 
 ### Scoring Levels (1-4 for each sub-axis)
 

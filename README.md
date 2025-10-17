@@ -17,8 +17,8 @@ Aplikace je **plně funkční** a připravená k použití!
 **2. Assessment Wizard** ([app/assessment/page.tsx](app/assessment/page.tsx))
 - Multi-step průvodce se 7 kroky:
   - Krok 0: Informace o týmu
-  - Kroky 1-5: Assessment 5 oblastí (22 sub-os)
-  - Krok 6: Pulse Survey (5 otázek)
+  - Kroky 1-5: Assessment 5 oblastí (21 sub-os)
+  - Krok 6: Pulse Survey (6 otázek)
 - Progress bar s indikací dokončení
 - Auto-save do local storage každou změnou
 - Možnost pokračovat v rozpracovaném assessmentu
@@ -36,7 +36,7 @@ Aplikace je **plně funkční** a připravená k použití!
 - Indikátory dokončení
 
 **5. Pulse Survey** ([components/assessment/PulseSurvey.tsx](components/assessment/PulseSurvey.tsx))
-- 5 otázek se sliderem (0-10)
+- 6 otázek se sliderem (0-10)
 - Vizuální feedback (emoji + barvy)
 - Živé zobrazení aktuálního skóre
 
@@ -59,9 +59,9 @@ Aplikace je **plně funkční** a připravená k použití!
 **9. Datový model**
 - **Kompletní framework data** ([lib/data/assessment-data.ts](lib/data/assessment-data.ts))
   - 5 oblastí
-  - 22 sub-os
-  - 88 detailních popisů levelů (4 × 22)
-  - 5 pulse survey otázek
+  - 21 sub-os
+  - 84 detailních popisů levelů (4 × 21)
+  - 6 pulse survey otázek
 - **TypeScript typy** ([lib/types/assessment.ts](lib/types/assessment.ts))
 
 ## 🚀 Spuštění aplikace
@@ -87,7 +87,7 @@ npm start
 
 ## 📊 Tech Health Framework
 
-### 5 Hlavních Oblastí (22 Sub-os)
+### 5 Hlavních Oblastí (21 Sub-os)
 
 #### 🧱 **A. Tech Debt** (5 sub-os)
 1. Code Quality Debt
@@ -110,12 +110,11 @@ npm start
 4. Logging / Tracing
 5. Postmortems & Learning
 
-#### ⚡ **D. Delivery Performance (DORA)** (5 sub-os)
+#### ⚡ **D. Delivery Performance (DORA)** (4 sub-os)
 1. Deployment Frequency (DF)
 2. Lead Time for Changes (LTC)
 3. Change Failure Rate (CFR)
 4. Mean Time to Recovery (MTTR)
-5. Rollback Frequency
 
 #### 🧠 **E. Governance & Knowledge** (5 sub-os)
 1. ADR Discipline
@@ -159,7 +158,7 @@ npm start
 - Volitelně přidejte komentář
 
 ### 4. Pulse Survey
-- Odpovězte na 5 otázek pomocí slideru (0-10)
+- Odpovězte na 6 otázek pomocí slideru (0-10)
 - Vyjadřuje subjektivní pocit týmu
 
 ### 5. Výsledky
