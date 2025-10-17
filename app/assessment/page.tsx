@@ -29,7 +29,7 @@ export default function AssessmentPage() {
     notes: ''
   });
   const [scores, setScores] = useState<Record<string, SubAxisScore>>({});
-  const [pulseScores, setPulseScores] = useState<Record<string, number>>({});
+  const [pulseScores, setPulseScores] = useState<Record<string, number | string>>({});
   const [participantsText, setParticipantsText] = useState('');
 
   const totalSteps = assessmentFramework.areas.length + 2; // team info + areas + pulse survey
@@ -113,7 +113,7 @@ export default function AssessmentPage() {
     }));
   };
 
-  const handlePulseScoreChange = (questionId: string, value: number) => {
+  const handlePulseScoreChange = (questionId: string, value: number | string) => {
     setPulseScores(prev => ({
       ...prev,
       [questionId]: value

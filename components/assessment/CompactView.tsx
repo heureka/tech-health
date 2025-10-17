@@ -11,9 +11,9 @@ interface CompactViewProps {
   areas: AssessmentArea[];
   pulseSurvey: PulseQuestion[];
   scores: Record<string, SubAxisScore>;
-  pulseScores: Record<string, number>;
+  pulseScores: Record<string, number | string>;
   onScoreChange: (subAxisId: string, score: SubAxisScore) => void;
-  onPulseScoreChange: (questionId: string, value: number) => void;
+  onPulseScoreChange: (questionId: string, value: number | string) => void;
 }
 
 export default function CompactView({
@@ -32,7 +32,10 @@ export default function CompactView({
   };
 
   const getPulseCompletion = () => {
-    const completed = pulseSurvey.filter(q => pulseScores[q.id] !== undefined && pulseScores[q.id] !== null).length;
+    const completed = pulseSurvey.filter(q => {
+      const score = pulseScores[q.id];
+      return score !== undefined && score !== null && score !== '';
+    }).length;
     const total = pulseSurvey.length;
     return { completed, total, percentage: (completed / total) * 100 };
   };

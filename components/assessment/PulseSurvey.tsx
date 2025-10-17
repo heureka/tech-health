@@ -4,11 +4,12 @@ import { PulseQuestion } from '@/lib/types/assessment';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
+import { Textarea } from '@/components/ui/textarea';
 
 interface PulseSurveyProps {
   questions: PulseQuestion[];
-  scores: Record<string, number>;
-  onScoreChange: (questionId: string, value: number) => void;
+  scores: Record<string, number | string>;
+  onScoreChange: (questionId: string, value: number | string) => void;
 }
 
 const getScoreColor = (score: number): string => {
@@ -49,7 +50,8 @@ export default function PulseSurvey({ questions, scores, onScoreChange }: PulseS
         <div className="space-y-8">
           {questions.map((question, index) => {
             const score = scores[question.id];
-            const hasScore = score !== undefined && score !== null;
+            const hasScore = score !== undefined && score !== null && score !== '';
+            const isTextarea = question.type === 'textarea';
 
             return (
               <div key={question.id} className="space-y-4 p-6 bg-slate-50 rounded-lg border border-slate-200">
@@ -72,32 +74,43 @@ export default function PulseSurvey({ questions, scores, onScoreChange }: PulseS
                 </div>
 
                 <div className="space-y-3 ml-11">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-slate-600">0 (Low)</span>
-                    {hasScore && (
-                      <span className={`text-3xl font-bold ${getScoreColor(score)}`}>
-                        {score} {getScoreEmoji(score)}
-                      </span>
-                    )}
-                    <span className="text-sm text-slate-600">10 (High)</span>
-                  </div>
+                  {isTextarea ? (
+                    <Textarea
+                      value={typeof score === 'string' ? score : ''}
+                      onChange={(e) => onScoreChange(question.id, e.target.value)}
+                      placeholder="Share what's slowing your team down..."
+                      className="min-h-[100px] resize-y"
+                    />
+                  ) : (
+                    <>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-slate-600">0 (Low)</span>
+                        {hasScore && typeof score === 'number' && (
+                          <span className={`text-3xl font-bold ${getScoreColor(score)}`}>
+                            {score} {getScoreEmoji(score)}
+                          </span>
+                        )}
+                        <span className="text-sm text-slate-600">10 (High)</span>
+                      </div>
 
-                  <Slider
-                    value={[hasScore ? score : 5]}
-                    onValueChange={(values) => onScoreChange(question.id, values[0])}
-                    min={question.min}
-                    max={question.max}
-                    step={1}
-                    className="w-full"
-                  />
+                      <Slider
+                        value={[hasScore && typeof score === 'number' ? score : 5]}
+                        onValueChange={(values) => onScoreChange(question.id, values[0])}
+                        min={question.min ?? 0}
+                        max={question.max ?? 10}
+                        step={1}
+                        className="w-full"
+                      />
 
-                  <div className="flex justify-between text-xs text-slate-500">
-                    {Array.from({ length: 11 }, (_, i) => (
-                      <span key={i} className={hasScore && score === i ? 'font-bold' : ''}>
-                        {i}
-                      </span>
-                    ))}
-                  </div>
+                      <div className="flex justify-between text-xs text-slate-500">
+                        {Array.from({ length: 11 }, (_, i) => (
+                          <span key={i} className={hasScore && score === i ? 'font-bold' : ''}>
+                            {i}
+                          </span>
+                        ))}
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             );

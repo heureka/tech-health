@@ -803,8 +803,7 @@ export const assessmentFramework: AssessmentFramework = {
       id: 'pulse-blockers',
       question: 'What\'s currently the biggest thing slowing your team down?',
       purpose: 'Qualitative insight beyond metrics',
-      min: 0,
-      max: 10
+      type: 'textarea'
     }
   ]
 };

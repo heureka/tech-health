@@ -47,10 +47,10 @@ export function calculateResults(
   const maturityLevel = getMaturityLevel(overall);
   const recommendations = generateRecommendations(areaScores);
 
-  // Calculate pulse survey average
+  // Calculate pulse survey average (only numeric values)
   const pulseValues = Object.values(response.pulseScores).filter(
-    (v) => v !== undefined && v !== null
-  );
+    (v) => v !== undefined && v !== null && typeof v === 'number'
+  ) as number[];
   const pulseAverage =
     pulseValues.length > 0
       ? pulseValues.reduce((sum, v) => sum + v, 0) / pulseValues.length

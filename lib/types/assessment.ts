@@ -30,8 +30,9 @@ export interface PulseQuestion {
   id: string;
   question: string;
   purpose: string;
-  min: number;
-  max: number;
+  type?: 'slider' | 'textarea';
+  min?: number;
+  max?: number;
 }
 
 // User responses
@@ -50,7 +51,7 @@ export interface SubAxisScore {
 export interface AssessmentResponse {
   teamInfo: TeamInfo;
   scores: Record<string, SubAxisScore>;
-  pulseScores: Record<string, number>;
+  pulseScores: Record<string, number | string>;
 }
 
 // Results and analysis
