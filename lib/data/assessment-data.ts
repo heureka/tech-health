@@ -469,7 +469,7 @@ export const assessmentFramework: AssessmentFramework = {
             {
               level: 4,
               label: 'Optimized',
-              description: 'RCAs for all Severity 1-2s; learnings feed Tech Health backlog; trends reviewed in Tech Health Review.',
+              description: 'RCAs for all SEVerity 1–2s; learnings feed Tech Health backlog; trends reviewed in Tech Health Review.',
               example: 'Learning culture, trends analyzed for systemic issues'
             }
           ]
@@ -480,7 +480,7 @@ export const assessmentFramework: AssessmentFramework = {
       id: 'delivery-dora',
       title: 'Delivery Performance (DORA)',
       emoji: '⚡',
-      description: 'Evaluates deployment frequency, lead time, change failure rate, recovery time, and rollback frequency',
+      description: 'Evaluates deployment frequency, lead time, change failure rate, and recovery time',
       subAxes: [
         {
           id: 'deployment-frequency',
@@ -599,36 +599,6 @@ export const assessmentFramework: AssessmentFramework = {
               label: 'Elite',
               description: '< 1h.',
               example: 'Minutes to recover from incidents'
-            }
-          ]
-        },
-        {
-          id: 'rollback-frequency',
-          title: 'Rollback Frequency',
-          levels: [
-            {
-              level: 1,
-              label: 'High',
-              description: 'Frequent rollbacks.',
-              example: 'Rollback more than 25% of deploys'
-            },
-            {
-              level: 2,
-              label: 'Medium',
-              description: 'Occasional.',
-              example: 'Rollback 10-25% of deploys'
-            },
-            {
-              level: 3,
-              label: 'Low',
-              description: 'Rare (< 10%).',
-              example: 'Rollback less than 10% of deploys'
-            },
-            {
-              level: 4,
-              label: 'Elite',
-              description: 'Exceptional (< 3%).',
-              example: 'Almost never need to rollback'
             }
           ]
         }
@@ -826,6 +796,13 @@ export const assessmentFramework: AssessmentFramework = {
       id: 'pulse-tools',
       question: 'Are your tools / environments effective?',
       purpose: 'Surfaces DevEx blockers',
+      min: 0,
+      max: 10
+    },
+    {
+      id: 'pulse-blockers',
+      question: 'What\'s currently the biggest thing slowing your team down?',
+      purpose: 'Qualitative insight beyond metrics',
       min: 0,
       max: 10
     }
