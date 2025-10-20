@@ -513,32 +513,32 @@ export const assessmentFramework: AssessmentFramework = {
           ]
         },
         {
-          id: 'lead-time',
-          title: 'Lead Time for Changes (LTC)',
+          id: 'cycle-time',
+          title: 'Cycle Time (CT)',
           levels: [
             {
               level: 1,
               label: 'Low',
-              description: '> 7 days.',
-              example: 'Weeks from commit to production'
+              description: '10+ days',
+              example: 'Time from work item start to merged & deployed (includes review & QA)'
             },
             {
               level: 2,
               label: 'Medium',
-              description: '2–7 days.',
-              example: 'About a week from commit to production'
+              description: '5-10 days',
+              example: 'About a week from work start to production'
             },
             {
               level: 3,
               label: 'High',
-              description: '1–2 days.',
-              example: 'Next day deployment'
+              description: '2-5 days',
+              example: 'Few days from start to deployment'
             },
             {
               level: 4,
               label: 'Elite',
-              description: '< 24h from commit to prod.',
-              example: 'Same-day deployment'
+              description: '< 2 days',
+              example: 'Quick turnaround from start to production'
             }
           ]
         },
@@ -549,25 +549,25 @@ export const assessmentFramework: AssessmentFramework = {
             {
               level: 1,
               label: 'High',
-              description: '> 25%.',
-              example: 'More than 1 in 4 changes cause issues'
+              description: '25+ %',
+              example: 'The percentage of deployments that cause production incidents, rollbacks, or hotfixes'
             },
             {
               level: 2,
               label: 'Medium',
-              description: '15–25%.',
+              description: '15–25 %',
               example: 'About 1 in 5 changes cause issues'
             },
             {
               level: 3,
               label: 'Low',
-              description: '5–15%.',
+              description: '5–15 %',
               example: 'Less than 1 in 10 changes cause issues'
             },
             {
               level: 4,
               label: 'Elite',
-              description: '< 5%.',
+              description: '< 5 %',
               example: 'Very rare production issues'
             }
           ]
@@ -579,25 +579,25 @@ export const assessmentFramework: AssessmentFramework = {
             {
               level: 1,
               label: 'High',
-              description: '> 6h.',
-              example: 'Hours to recover from incidents'
+              description: '6+ hrs',
+              example: 'How long it takes to restore service after an incident or degradation'
             },
             {
               level: 2,
               label: 'Medium',
-              description: '2–6h.',
+              description: '2–6 h',
               example: 'Few hours to recover'
             },
             {
               level: 3,
               label: 'Low',
-              description: '1–2h.',
+              description: '1–2 h',
               example: 'About an hour to recover'
             },
             {
               level: 4,
               label: 'Elite',
-              description: '< 1h.',
+              description: '< 1 h',
               example: 'Minutes to recover from incidents'
             }
           ]
