@@ -4,6 +4,7 @@ import {
   AreaScore,
   MaturityLevel,
   Recommendation,
+  CompassPosition,
 } from '../types/assessment';
 import { assessmentFramework } from '../data/assessment-data';
 
@@ -56,12 +57,16 @@ export function calculateResults(
       ? pulseValues.reduce((sum, v) => sum + v, 0) / pulseValues.length
       : 0;
 
+  // Calculate Compass position
+  const compass = calculateCompassPosition(areaScores);
+
   return {
     overall,
     maturityLevel,
     areaScores,
     pulseAverage,
     recommendations,
+    compass,
     completedAt: new Date().toISOString(),
   };
 }
@@ -127,7 +132,7 @@ function generateRecommendations(areaScores: AreaScore[]): Recommendation[] {
         areaId: area.areaId,
         areaTitle: area.areaTitle,
         issue: `${lowest.subAxisTitle} is at Level ${lowest.level}`,
-        action: getActionForSubAxis(area.areaId, lowest.subAxisId, lowest.level),
+        action: getActionForSubAxis(area.areaId, lowest.subAxisId),
         impact: getImpactForArea(area.areaId),
       });
     }
@@ -156,8 +161,7 @@ function generateRecommendations(areaScores: AreaScore[]): Recommendation[] {
 
 function getActionForSubAxis(
   areaId: string,
-  subAxisId: string,
-  _level: number
+  subAxisId: string
 ): string {
   const actions: Record<string, Record<string, string>> = {
     'tech-debt': {
@@ -254,4 +258,93 @@ export function getMaturityColor(level: MaturityLevel): string {
     optimized: 'bg-emerald-100 text-emerald-800 border-emerald-300',
   };
   return colors[level];
+}
+
+/**
+ * Calculate Speed-Sustainability Compass position
+ * Based on the Heureka evaluation framework
+ *
+ * Speed (0-100): Ability to deliver value quickly
+ * - Delivery DORA metrics (from delivery-dora area)
+ * - Testing & Automation maturity
+ *
+ * Sustainability (0-100): Ability to recover, stay reliable, and invest in long-term health
+ * - Observability & Stability
+ * - Tech Debt management
+ * - Governance & Knowledge
+ */
+export function calculateCompassPosition(areaScores: AreaScore[]): CompassPosition {
+  // Find relevant area scores
+  const deliveryDora = areaScores.find(a => a.areaId === 'delivery-dora');
+  const testingAutomation = areaScores.find(a => a.areaId === 'testing-automation');
+  const observability = areaScores.find(a => a.areaId === 'observability-stability');
+  const techDebt = areaScores.find(a => a.areaId === 'tech-debt');
+  const governance = areaScores.find(a => a.areaId === 'governance-knowledge');
+
+  // Calculate Speed score (0-100)
+  // Speed = ability to deliver quickly (DORA DF + Lead Time + Testing/Deployment automation)
+  const speedComponents = [
+    deliveryDora?.averageScore || 0,
+    testingAutomation?.averageScore || 0,
+  ];
+  const speedAverage = speedComponents.reduce((sum, s) => sum + s, 0) / speedComponents.length;
+  const speed = Math.round((speedAverage / 4) * 100); // Convert 1-4 scale to 0-100
+
+  // Calculate Sustainability score (0-100)
+  // Sustainability = ability to recover, stay reliable, manage debt (CFR, MTTR, SLOs, Tech Debt, Governance)
+  const sustainabilityComponents = [
+    observability?.averageScore || 0,
+    techDebt?.averageScore || 0,
+    governance?.averageScore || 0,
+  ];
+  const sustainabilityAverage = sustainabilityComponents.reduce((sum, s) => sum + s, 0) / sustainabilityComponents.length;
+  const sustainability = Math.round((sustainabilityAverage / 4) * 100); // Convert 1-4 scale to 0-100
+
+  // Determine interpretation
+  const difference = Math.abs(speed - sustainability);
+  let interpretation: CompassPosition['interpretation'];
+
+  if (difference <= 10) {
+    interpretation = 'balanced';
+  } else if (speed > sustainability) {
+    interpretation = 'speed-heavy';
+  } else {
+    interpretation = 'sustainability-heavy';
+  }
+
+  return {
+    speed,
+    sustainability,
+    interpretation,
+  };
+}
+
+export function getCompassInterpretation(position: CompassPosition): {
+  label: string;
+  description: string;
+  action: string;
+  emoji: string;
+} {
+  const interpretations = {
+    'speed-heavy': {
+      label: 'Speed-Heavy',
+      emoji: '⚡',
+      description: 'Fast but potentially fragile. You can deliver quickly, but may have reliability challenges.',
+      action: 'Increase stability allocation to 40%; focus on alerting, monitoring, and CI reliability to prevent burnout.',
+    },
+    'sustainability-heavy': {
+      label: 'Sustainability-Heavy',
+      emoji: '🛡️',
+      description: 'Over-invested in maintenance. Systems are stable but innovation may be slowing down.',
+      action: 'Shift 10% capacity back to feature delivery. Your foundation is strong - time to build on it.',
+    },
+    'balanced': {
+      label: 'Balanced',
+      emoji: '🎯',
+      description: 'Healthy balance between execution speed and system resilience.',
+      action: 'Maintain current practices and share your learnings with other teams.',
+    },
+  };
+
+  return interpretations[position.interpretation];
 }

@@ -52,6 +52,13 @@ This is a **client-side-only Next.js application** with no backend API. All data
 - 3.0-3.4: 🟡 Defined (stable processes)
 - 3.5-4.0: 🟢 Optimized (data-driven, automated)
 
+**Speed-Sustainability Compass**: Visual leadership tool showing whether the team leans toward speed or sustainability (0-100 scale):
+- **Speed** (⚡): Ability to deliver quickly - measured by DORA delivery metrics and Testing/Automation maturity
+- **Sustainability** (🛡️): Ability to recover and stay reliable - measured by Observability, Tech Debt, and Governance
+- **Balanced Zone**: Within 10 points difference = healthy balance
+- **Speed-Heavy**: High delivery speed but potential reliability challenges → increase stability allocation
+- **Sustainability-Heavy**: Over-invested in maintenance, innovation slowdown → shift capacity to features
+
 ### View Modes
 
 The assessment supports two view modes (toggle persisted in localStorage):
@@ -70,6 +77,7 @@ The assessment supports two view modes (toggle persisted in localStorage):
 ### Results Components ([components/results/](components/results/))
 
 - `RadarChart.tsx`: Recharts-based pentagon radar chart showing 5 area scores
+- `CompassChart.tsx`: SVG-based Speed-Sustainability Compass visualization with quadrant labels
 - `Recommendations.tsx`: Prioritized action items generated from low scores
 
 ### UI Components ([components/ui/](components/ui/))
@@ -96,6 +104,15 @@ Standard shadcn/ui components built on Radix UI primitives. These are auto-gener
 - Numeric questions (0-10) are averaged for pulse score
 - Textarea answers are stored but not scored
 - Pulse results displayed separately from technical assessment
+
+**Compass Position Calculation**:
+1. **Speed Score** (0-100): Average of Delivery DORA + Testing/Automation areas, normalized to 0-100 scale
+2. **Sustainability Score** (0-100): Average of Observability + Tech Debt + Governance areas, normalized to 0-100 scale
+3. **Interpretation**:
+   - Balanced: Difference ≤ 10 points
+   - Speed-Heavy: Speed > Sustainability by > 10 points
+   - Sustainability-Heavy: Sustainability > Speed by > 10 points
+4. Provides actionable recommendations based on position (e.g., increase stability allocation if speed-heavy)
 
 ### Storage Layer ([lib/utils/storage.ts](lib/utils/storage.ts))
 

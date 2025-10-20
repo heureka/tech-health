@@ -42,6 +42,7 @@ Aplikace je **plně funkční** a připravená k použití!
 
 **6. Results Dashboard** ([app/results/page.tsx](app/results/page.tsx))
 - Overall skóre a maturity level
+- **Speed-Sustainability Compass** - vizuální indikátor rychlosti vs. udržitelnosti
 - Radar chart pro vizualizaci 5 oblastí
 - Detailní breakdown každé oblasti
 - Prioritizovaná doporučení
@@ -50,6 +51,7 @@ Aplikace je **plně funkční** a připravená k použití!
 
 **7. Komponenty vizualizace**
 - **RadarChart** ([components/results/RadarChart.tsx](components/results/RadarChart.tsx)) - Recharts radar graf
+- **CompassChart** ([components/results/CompassChart.tsx](components/results/CompassChart.tsx)) - Speed-Sustainability Compass (SVG vizualizace)
 - **Recommendations** ([components/results/Recommendations.tsx](components/results/Recommendations.tsx)) - Doporučení s prioritami
 
 **8. Business logika**
@@ -141,6 +143,21 @@ npm start
 | 3.0 - 3.4 | 🟡 Stable baseline | Sustain & optimize critical paths |
 | 3.5 - 4.0 | 🟢 Optimized, data-driven | Share practices; help mentor others |
 
+### 🧭 Speed-Sustainability Compass
+
+Compass ukazuje, zda tým inklinuje k rychlosti nebo udržitelnosti (škála 0-100):
+
+| Pozice | Význam | Akce |
+|--------|--------|------|
+| ⚡ **Speed-Heavy** | Rychlé dodávání, ale potenciální problémy se spolehlivostí | Zvýšit stabilizační alokaci na 40%; focus na alerting & monitoring |
+| 🛡️ **Sustainability-Heavy** | Přeinvestováno do údržby, inovace zpomalují | Přesunout 10% kapacity zpět na features |
+| 🎯 **Balanced** | Zdravá rovnováha mezi rychlostí a resilience | Udržovat současné praktiky, sdílet s ostatními týmy |
+
+**Výpočet:**
+- **Speed** (0-100): DORA Delivery metriky + Testing/Automation maturity
+- **Sustainability** (0-100): Observability + Tech Debt + Governance
+- **Balanced zóna**: rozdíl ≤ 10 bodů
+
 ## 🎯 Jak používat aplikaci
 
 ### 1. Úvodní stránka
@@ -201,6 +218,7 @@ configurator/
 │   │   └── PulseSurvey.tsx     # Pulse survey ✅
 │   └── results/
 │       ├── RadarChart.tsx       # Radar chart ✅
+│       ├── CompassChart.tsx     # Speed-Sustainability Compass ✅
 │       └── Recommendations.tsx  # Recommendations ✅
 ├── lib/
 │   ├── data/

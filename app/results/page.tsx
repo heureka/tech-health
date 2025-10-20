@@ -8,12 +8,13 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { loadAssessment, clearAssessment, exportAssessmentAsJSON, saveAssessment } from '@/lib/utils/storage';
-import { calculateResults, getMaturityDescription, getMaturityColor, formatDate } from '@/lib/utils/scoring-logic';
+import { calculateResults, getMaturityDescription, getMaturityColor, formatDate, getCompassInterpretation } from '@/lib/utils/scoring-logic';
 import { AssessmentResponse, AssessmentResults } from '@/lib/types/assessment';
 import RadarChart from '@/components/results/RadarChart';
 import Recommendations from '@/components/results/Recommendations';
+import CompassChart from '@/components/results/CompassChart';
 import ImportDialog from '@/components/ImportDialog';
-import { Home, Download, Trash2, BarChart3, Upload } from 'lucide-react';
+import { Home, Download, Trash2, BarChart3, Upload, Compass } from 'lucide-react';
 
 export default function ResultsPage() {
   const router = useRouter();
@@ -70,6 +71,7 @@ export default function ResultsPage() {
   }
 
   const maturityInfo = getMaturityDescription(results.maturityLevel);
+  const compassInfo = getCompassInterpretation(results.compass);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100">
@@ -148,6 +150,36 @@ export default function ResultsPage() {
             <p className="text-lg text-slate-700">
               {maturityInfo.action}
             </p>
+          </CardContent>
+        </Card>
+
+        {/* Speed-Sustainability Compass */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Compass className="w-6 h-6" />
+              Speed–Sustainability Compass
+            </CardTitle>
+            <CardDescription>
+              Visual indicator showing whether your team leans toward speed or sustainability
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <CompassChart compass={results.compass} />
+
+            {/* Interpretation */}
+            <div className="mt-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-2xl">{compassInfo.emoji}</span>
+                <h4 className="font-semibold text-lg">{compassInfo.label}</h4>
+              </div>
+              <p className="text-slate-700 mb-3">{compassInfo.description}</p>
+              <div className="bg-blue-50 border-l-4 border-blue-500 p-3 rounded">
+                <p className="text-sm font-medium text-blue-900">
+                  <span className="font-semibold">Action:</span> {compassInfo.action}
+                </p>
+              </div>
+            </div>
           </CardContent>
         </Card>
 

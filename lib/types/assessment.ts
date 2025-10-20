@@ -78,12 +78,19 @@ export interface Recommendation {
   impact: string;
 }
 
+export interface CompassPosition {
+  speed: number; // 0-100
+  sustainability: number; // 0-100
+  interpretation: 'speed-heavy' | 'sustainability-heavy' | 'balanced';
+}
+
 export interface AssessmentResults {
   overall: number;
   maturityLevel: MaturityLevel;
   areaScores: AreaScore[];
   pulseAverage: number;
   recommendations: Recommendation[];
+  compass: CompassPosition;
   completedAt: string;
 }
 
