@@ -8,8 +8,9 @@ import { Progress } from '@/components/ui/progress';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { assessmentFramework } from '@/lib/data/assessment-data';
-import { AssessmentResponse, SubAxisScore, TeamInfo } from '@/lib/types/assessment';
+import { AssessmentResponse, SubAxisScore, TeamInfo, ServiceCriticality } from '@/lib/types/assessment';
 import { saveAssessment, loadAssessment } from '@/lib/utils/storage';
 import { ArrowLeft, ArrowRight, Save, LayoutList, Rows3 } from 'lucide-react';
 import AreaAssessment from '@/components/assessment/AreaAssessment';
@@ -199,6 +200,24 @@ export default function AssessmentPage() {
             </div>
 
             <div className="space-y-2">
+              <Label htmlFor="criticality">Service Criticality</Label>
+              <Select
+                value={teamInfo.criticality}
+                onValueChange={(value) => setTeamInfo(prev => ({ ...prev, criticality: value as ServiceCriticality }))}
+              >
+                <SelectTrigger id="criticality">
+                  <SelectValue placeholder="Select service criticality..." />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="mission-critical">🔴 Mission Critical - Direct customer/revenue impact</SelectItem>
+                  <SelectItem value="business-critical">🟠 Business Critical - Important with fallback options</SelectItem>
+                  <SelectItem value="supporting">🟡 Supporting - Internal tools and services</SelectItem>
+                  <SelectItem value="experimental">🟢 Experimental - Low impact if fails</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
               <Label htmlFor="notes">Notes (optional)</Label>
               <Textarea
                 id="notes"
@@ -285,6 +304,24 @@ export default function AssessmentPage() {
               onChange={(e) => setParticipantsText(e.target.value)}
             />
           </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="criticality-compact">Service Criticality</Label>
+          <Select
+            value={teamInfo.criticality}
+            onValueChange={(value) => setTeamInfo(prev => ({ ...prev, criticality: value as ServiceCriticality }))}
+          >
+            <SelectTrigger id="criticality-compact">
+              <SelectValue placeholder="Select service criticality..." />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="mission-critical">🔴 Mission Critical - Direct customer/revenue impact</SelectItem>
+              <SelectItem value="business-critical">🟠 Business Critical - Important with fallback options</SelectItem>
+              <SelectItem value="supporting">🟡 Supporting - Internal tools and services</SelectItem>
+              <SelectItem value="experimental">🟢 Experimental - Low impact if fails</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="space-y-2">

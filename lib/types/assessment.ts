@@ -36,10 +36,13 @@ export interface PulseQuestion {
 }
 
 // User responses
+export type ServiceCriticality = 'mission-critical' | 'business-critical' | 'supporting' | 'experimental';
+
 export interface TeamInfo {
   teamName: string;
   date: string;
   participants: string[];
+  criticality?: ServiceCriticality;
   notes?: string;
 }
 

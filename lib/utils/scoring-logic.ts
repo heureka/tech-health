@@ -348,3 +348,18 @@ export function getCompassInterpretation(position: CompassPosition): {
 
   return interpretations[position.interpretation];
 }
+
+export function getCriticalityLabel(criticality: string): string {
+  switch (criticality) {
+    case 'mission-critical':
+      return '🔴 Mission Critical';
+    case 'business-critical':
+      return '🟠 Business Critical';
+    case 'supporting':
+      return '🟡 Supporting';
+    case 'experimental':
+      return '🟢 Experimental';
+    default:
+      return '';
+  }
+}

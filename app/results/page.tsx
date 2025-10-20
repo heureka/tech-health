@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { loadAssessment, clearAssessment, exportAssessmentAsJSON, saveAssessment } from '@/lib/utils/storage';
-import { calculateResults, getMaturityDescription, getMaturityColor, formatDate, getCompassInterpretation } from '@/lib/utils/scoring-logic';
+import { calculateResults, getMaturityDescription, getMaturityColor, formatDate, getCompassInterpretation, getCriticalityLabel } from '@/lib/utils/scoring-logic';
 import { AssessmentResponse, AssessmentResults } from '@/lib/types/assessment';
 import RadarChart from '@/components/results/RadarChart';
 import Recommendations from '@/components/results/Recommendations';
@@ -81,9 +81,16 @@ export default function ResultsPage() {
           <div className="flex items-center justify-between mb-4">
             <div>
               <h1 className="text-4xl font-bold mb-2">Assessment Results</h1>
-              <p className="text-slate-600">
-                {response.teamInfo.teamName} • {formatDate(response.teamInfo.date)}
-              </p>
+              <div className="flex items-center gap-3">
+                <p className="text-slate-600">
+                  {response.teamInfo.teamName} • {formatDate(response.teamInfo.date)}
+                </p>
+                {response.teamInfo.criticality && (
+                  <Badge variant="outline" className="font-normal">
+                    {getCriticalityLabel(response.teamInfo.criticality)}
+                  </Badge>
+                )}
+              </div>
             </div>
             <div className="flex gap-2">
               <Button variant="outline" onClick={handleExportJSON} className="gap-2">
