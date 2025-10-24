@@ -187,10 +187,10 @@ function getActionForSubAxis(
     },
     'delivery-dora': {
       'deployment-frequency': 'Reduce batch size and increase deployment frequency',
-      'lead-time': 'Identify and remove bottlenecks in deployment pipeline',
+      'cycle-time': 'Streamline work item process from start to deployment (review & QA flow)',
+      'lead-time-changes': 'Identify and remove bottlenecks in deployment pipeline from commit to prod',
       'change-failure-rate': 'Invest in test automation and deployment safety checks',
       'mean-time-recovery': 'Improve monitoring and practice rollback procedures',
-      'rollback-frequency': 'Increase test coverage and implement canary deployments',
     },
     'governance-knowledge': {
       'adr-discipline': 'Require ADRs for all significant technical decisions',

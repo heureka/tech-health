@@ -15,8 +15,8 @@ export default function Home() {
   const router = useRouter();
   const [showImportDialog, setShowImportDialog] = useState(false);
 
-  const handleImportSuccess = (data: AssessmentResponse) => {
-    saveAssessment(data);
+  const handleImportSuccess = (data: AssessmentResponse | Partial<AssessmentResponse>) => {
+    saveAssessment(data as AssessmentResponse);
     setShowImportDialog(false);
     router.push('/results');
   };

@@ -98,3 +98,25 @@ export function exportAssessmentAsJSON(response: AssessmentResponse, results: un
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
 }
+
+export function exportInProgressAssessment(response: Partial<AssessmentResponse>): void {
+  const exportData = {
+    assessment: response,
+    status: 'in-progress',
+    exportedAt: new Date().toISOString(),
+  };
+
+  const teamName = response.teamInfo?.teamName || 'unnamed-team';
+  const blob = new Blob([JSON.stringify(exportData, null, 2)], {
+    type: 'application/json',
+  });
+
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `tech-health-draft-${teamName.replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}

@@ -44,12 +44,38 @@ export default function ResultsPage() {
     }
   };
 
-  const handleImportSuccess = (data: AssessmentResponse) => {
-    saveAssessment(data);
-    setShowImportDialog(false);
-    const calculatedResults = calculateResults(data);
-    setResponse(data);
-    setResults(calculatedResults);
+  const handleImportSuccess = (data: AssessmentResponse | Partial<AssessmentResponse>) => {
+    // Check if this is a complete assessment or in-progress
+    // A complete assessment must have:
+    // 1. Team info with name
+    // 2. All area sub-axes filled (25 total across 5 areas)
+    // 3. All pulse survey questions answered (6 total)
+
+    const hasBasicInfo = !!data.teamInfo?.teamName;
+    const scoresCount = data.scores ? Object.keys(data.scores).length : 0;
+    const pulseCount = data.pulseScores ? Object.keys(data.pulseScores).length : 0;
+
+    // Framework has 25 sub-axes (5+5+5+5+5) and 6 pulse questions
+    const TOTAL_SUBAXES = 25;
+    const TOTAL_PULSE_QUESTIONS = 6;
+
+    const isComplete = hasBasicInfo &&
+                      scoresCount >= TOTAL_SUBAXES &&
+                      pulseCount >= TOTAL_PULSE_QUESTIONS;
+
+    if (isComplete) {
+      // Complete assessment - show results
+      saveAssessment(data);
+      setShowImportDialog(false);
+      const calculatedResults = calculateResults(data as AssessmentResponse);
+      setResponse(data as AssessmentResponse);
+      setResults(calculatedResults);
+    } else {
+      // In-progress/draft assessment - redirect to assessment page to continue
+      saveAssessment(data);
+      setShowImportDialog(false);
+      router.push('/assessment');
+    }
   };
 
   const handleStartNew = () => {

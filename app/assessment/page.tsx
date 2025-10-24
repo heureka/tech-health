@@ -11,8 +11,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { assessmentFramework } from '@/lib/data/assessment-data';
 import { AssessmentResponse, SubAxisScore, TeamInfo, ServiceCriticality } from '@/lib/types/assessment';
-import { saveAssessment, loadAssessment } from '@/lib/utils/storage';
-import { ArrowLeft, ArrowRight, Save, LayoutList, Rows3 } from 'lucide-react';
+import { saveAssessment, loadAssessment, exportInProgressAssessment } from '@/lib/utils/storage';
+import { ArrowLeft, ArrowRight, Save, LayoutList, Rows3, Download } from 'lucide-react';
 import AreaAssessment from '@/components/assessment/AreaAssessment';
 import PulseSurvey from '@/components/assessment/PulseSurvey';
 import CompactView from '@/components/assessment/CompactView';
@@ -152,6 +152,21 @@ export default function AssessmentPage() {
     );
 
     return allAreasComplete && pulseSurveyComplete;
+  };
+
+  const handleExportDraft = () => {
+    const response: Partial<AssessmentResponse> = {
+      teamInfo: {
+        ...teamInfo,
+        participants: participantsText
+          .split(',')
+          .map(p => p.trim())
+          .filter(p => p.length > 0)
+      },
+      scores,
+      pulseScores
+    };
+    exportInProgressAssessment(response);
   };
 
   const renderStep = () => {
@@ -410,9 +425,21 @@ export default function AssessmentPage() {
                 {currentStep === 0 ? 'Home' : 'Previous'}
               </Button>
 
-              <div className="flex items-center gap-2 text-sm text-slate-600">
-                <Save className="w-4 h-4" />
-                Auto-saved
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 text-sm text-slate-600">
+                  <Save className="w-4 h-4" />
+                  Auto-saved
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleExportDraft}
+                  className="gap-2"
+                  title="Export current progress as JSON"
+                >
+                  <Download className="w-4 h-4" />
+                  <span className="hidden sm:inline">Export Draft</span>
+                </Button>
               </div>
 
               <Button
@@ -458,9 +485,21 @@ export default function AssessmentPage() {
                 Home
               </Button>
 
-              <div className="flex items-center gap-2 text-sm text-slate-600">
-                <Save className="w-4 h-4" />
-                Auto-saved
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 text-sm text-slate-600">
+                  <Save className="w-4 h-4" />
+                  Auto-saved
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleExportDraft}
+                  className="gap-2"
+                  title="Export current progress as JSON"
+                >
+                  <Download className="w-4 h-4" />
+                  <span className="hidden sm:inline">Export Draft</span>
+                </Button>
               </div>
 
               <Button

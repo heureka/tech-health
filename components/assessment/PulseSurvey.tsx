@@ -40,7 +40,9 @@ export default function PulseSurvey({ questions, scores, onScoreChange }: PulseS
           Pulse Survey
         </CardTitle>
         <CardDescription className="text-base">
-          Quick sentiment check on key aspects of your team&apos;s experience (0-10 scale)
+          Quick sentiment check on key aspects of your team&apos;s experience.
+          <br />
+          <strong className="text-slate-700">Scale: 0 = worst, 10 = best</strong>
         </CardDescription>
         <div className="text-sm text-slate-600 mt-2">
           Progress: {completedCount} / {questions.length} answered
@@ -84,13 +86,13 @@ export default function PulseSurvey({ questions, scores, onScoreChange }: PulseS
                   ) : (
                     <>
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-slate-600">0 (Low)</span>
+                        <span className="text-sm text-slate-600">0 (Worst)</span>
                         {hasScore && typeof score === 'number' && (
                           <span className={`text-3xl font-bold ${getScoreColor(score)}`}>
                             {score} {getScoreEmoji(score)}
                           </span>
                         )}
-                        <span className="text-sm text-slate-600">10 (High)</span>
+                        <span className="text-sm text-green-700 font-semibold">10 (Best)</span>
                       </div>
 
                       <Slider
@@ -120,7 +122,7 @@ export default function PulseSurvey({ questions, scores, onScoreChange }: PulseS
         <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
           <p className="text-sm text-slate-700">
             <strong>💡 Tip:</strong> These questions capture the team&apos;s subjective experience.
-            There are no wrong answers - be honest about how you feel right now.
+            <strong className="text-green-700"> Higher scores = better.</strong> There are no wrong answers - be honest about how you feel right now.
           </p>
         </div>
       </CardContent>

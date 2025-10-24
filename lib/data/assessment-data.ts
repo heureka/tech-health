@@ -480,7 +480,7 @@ export const assessmentFramework: AssessmentFramework = {
       id: 'delivery-dora',
       title: 'Delivery Performance (DORA)',
       emoji: '⚡',
-      description: 'Evaluates deployment frequency, lead time, change failure rate, and recovery time',
+      description: 'Evaluates deployment frequency, cycle time, lead time for changes, change failure rate, and recovery time',
       subAxes: [
         {
           id: 'deployment-frequency',
@@ -539,6 +539,36 @@ export const assessmentFramework: AssessmentFramework = {
               label: 'Elite',
               description: '< 2 days',
               example: 'Quick turnaround from start to production'
+            }
+          ]
+        },
+        {
+          id: 'lead-time-changes',
+          title: 'Lead Time for Changes (LTC)',
+          levels: [
+            {
+              level: 1,
+              label: 'Low',
+              description: '7+ days',
+              example: 'The time from code commit to deployment in production.'
+            },
+            {
+              level: 2,
+              label: 'Medium',
+              description: '2–7 days',
+              example: 'Few days from commit to production'
+            },
+            {
+              level: 3,
+              label: 'High',
+              description: '1–2 days',
+              example: 'About a day from commit to deployment'
+            },
+            {
+              level: 4,
+              label: 'Elite',
+              description: '< 24 h',
+              example: '< 24 h from commit to prod.'
             }
           ]
         },
@@ -766,36 +796,36 @@ export const assessmentFramework: AssessmentFramework = {
   pulseSurvey: [
     {
       id: 'pulse-tech-debt',
-      question: 'How much does tech debt slow you down?',
-      purpose: 'Detects friction sources',
+      question: 'How well does your team manage tech debt?',
+      purpose: 'Detects friction sources (0 = constant slowdown, 10 = debt under control)',
       min: 0,
       max: 10
     },
     {
       id: 'pulse-release',
       question: 'How smooth is your release process?',
-      purpose: 'Checks delivery flow confidence',
+      purpose: 'Checks delivery flow confidence (0 = painful/stressful, 10 = seamless)',
       min: 0,
       max: 10
     },
     {
       id: 'pulse-time',
       question: 'Do you have time for stability / engineering work?',
-      purpose: 'Validates 25% allocation reality',
+      purpose: 'Validates 25% allocation reality (0 = none, 10 = consistently ~25%)',
       min: 0,
       max: 10
     },
     {
       id: 'pulse-support',
       question: 'Do you feel leadership supports technical investment?',
-      purpose: 'Measures cultural alignment',
+      purpose: 'Measures cultural alignment (0 = not at all, 10 = fully supportive)',
       min: 0,
       max: 10
     },
     {
       id: 'pulse-tools',
       question: 'Are your tools / environments effective?',
-      purpose: 'Surfaces DevEx blockers',
+      purpose: 'Surfaces DevEx blockers (0 = major blockers, 10 = highly effective)',
       min: 0,
       max: 10
     },

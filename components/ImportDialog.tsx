@@ -7,19 +7,21 @@ import { Upload, X, AlertCircle, CheckCircle } from 'lucide-react';
 import { AssessmentResponse } from '@/lib/types/assessment';
 
 interface ImportDialogProps {
-  onImportSuccess: (data: AssessmentResponse) => void;
+  onImportSuccess: (data: AssessmentResponse | Partial<AssessmentResponse>) => void;
   onClose: () => void;
 }
 
 interface ExportedData {
-  assessment: AssessmentResponse;
-  results: unknown;
+  assessment: AssessmentResponse | Partial<AssessmentResponse>;
+  results?: unknown;
+  status?: 'in-progress' | 'completed';
   exportedAt: string;
 }
 
 export default function ImportDialog({ onImportSuccess, onClose }: ImportDialogProps) {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [isInProgress, setIsInProgress] = useState(false);
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -36,19 +38,19 @@ export default function ImportDialog({ onImportSuccess, onClose }: ImportDialogP
 
     const assessment = exportData.assessment;
 
-    // Validate team info
-    if (!assessment.teamInfo || !assessment.teamInfo.teamName || !assessment.teamInfo.date) {
-      throw new Error('Invalid or missing team information');
+    // For in-progress assessments, require at least team name
+    if (!assessment.teamInfo || !assessment.teamInfo.teamName) {
+      throw new Error('Missing team name - at least team information is required');
     }
 
-    // Validate scores
-    if (!assessment.scores || typeof assessment.scores !== 'object') {
-      throw new Error('Invalid or missing scores data');
+    // Scores and pulseScores can be partial/empty for in-progress assessments
+    // Just validate they are objects if present
+    if (assessment.scores && typeof assessment.scores !== 'object') {
+      throw new Error('Invalid scores data format');
     }
 
-    // Validate pulse scores
-    if (!assessment.pulseScores || typeof assessment.pulseScores !== 'object') {
-      throw new Error('Invalid or missing pulse scores data');
+    if (assessment.pulseScores && typeof assessment.pulseScores !== 'object') {
+      throw new Error('Invalid pulse scores data format');
     }
 
     return true;
@@ -57,6 +59,7 @@ export default function ImportDialog({ onImportSuccess, onClose }: ImportDialogP
   const handleFile = async (file: File) => {
     setError(null);
     setSuccess(false);
+    setIsInProgress(false);
 
     if (!file.name.endsWith('.json')) {
       setError('Please select a JSON file');
@@ -68,6 +71,18 @@ export default function ImportDialog({ onImportSuccess, onClose }: ImportDialogP
       const data = JSON.parse(text);
 
       if (validateImportedData(data)) {
+        // Check if it's an in-progress (draft) assessment
+        // A draft is identified by:
+        // 1. Explicit status: "in-progress" (new format)
+        // 2. Missing results object (old complete exports always have results)
+        // 3. Empty scores object (nothing filled in yet)
+        const isDraft = data.status === 'in-progress' ||
+          !data.results ||
+          (!!data.assessment.scores && Object.keys(data.assessment.scores).length === 0);
+
+        // Old complete exports have both assessment AND results
+        // New drafts have only assessment with status: "in-progress"
+        setIsInProgress(!!isDraft);
         setSuccess(true);
         setTimeout(() => {
           onImportSuccess(data.assessment);
@@ -155,7 +170,11 @@ export default function ImportDialog({ onImportSuccess, onClose }: ImportDialogP
                 <CheckCircle className="w-12 h-12 text-green-500 mx-auto" />
                 <div>
                   <p className="font-semibold text-green-700">Import successful!</p>
-                  <p className="text-sm text-slate-600">Loading results...</p>
+                  <p className="text-sm text-slate-600">
+                    {isInProgress
+                      ? 'Loading draft assessment...'
+                      : 'Loading results...'}
+                  </p>
                 </div>
               </div>
             ) : (
@@ -186,8 +205,9 @@ export default function ImportDialog({ onImportSuccess, onClose }: ImportDialogP
             <p className="font-semibold mb-2">Expected format:</p>
             <ul className="list-disc list-inside space-y-1 text-xs">
               <li>JSON file exported from this application</li>
-              <li>Contains assessment data and team information</li>
-              <li>Includes scores and pulse survey responses</li>
+              <li>Completed assessments OR draft (in-progress) exports</li>
+              <li>Drafts will open in the assessment page to continue</li>
+              <li>Completed assessments will show results immediately</li>
             </ul>
           </div>
         </CardContent>

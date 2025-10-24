@@ -34,8 +34,8 @@ This is a **client-side-only Next.js application** with no backend API. All data
 
 **Single Source of Truth**: [lib/data/assessment-data.ts](lib/data/assessment-data.ts) contains the complete framework definition:
 - 5 assessment areas with emojis and descriptions
-- 21 sub-axes (Tech Debt: 5, Testing: 5, Observability: 5, DORA: 4, Governance: 5)
-- 84 level descriptions (4 levels × 21 sub-axes)
+- 25 sub-axes (Tech Debt: 5, Testing: 5, Observability: 5, DORA: 5, Governance: 5)
+- 100 level descriptions (4 levels × 25 sub-axes)
 - 6 Pulse Survey questions (5 numeric sliders 0-10, 1 textarea)
 
 **Type-Safe Data Model**: [lib/types/assessment.ts](lib/types/assessment.ts) defines all TypeScript interfaces:
